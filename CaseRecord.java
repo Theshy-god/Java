@@ -3,10 +3,10 @@ import java.util.*;
 import java.time.*;
 
 public class CaseRecord {
-    private LocalDate date;
-    private int staffCases;
-    private int studentCases;
-    private int otherCases;
+    private final LocalDate date;
+    private final int staffCases;
+    private final int studentCases;
+    private final int otherCases;
 
     public CaseRecord(LocalDate date,int staffCases,int studentCases,int otherCases){
         this.date = date;

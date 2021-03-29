@@ -12,13 +12,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class CovidDataset {
-    private final ArrayList<CaseRecord> Caselist =new ArrayList<>();
+      ArrayList<CaseRecord> Caselist =new ArrayList<>();
 
     public CovidDataset(){
 
     }
     public void readDailyCases(String filename) throws IOException
     {
+        Caselist.clear();
         File file = new File(filename);
         if(!file.exists())
         {
@@ -52,7 +53,7 @@ public class CovidDataset {
 
     public int size()
     {
-        return this.Caselist.size();
+        return Caselist.size();
     }
 
     public void addRecord(CaseRecord rec){
@@ -71,11 +72,9 @@ public class CovidDataset {
     public CaseRecord dailyCasesOn(LocalDate day)
     {
 
-        for (int i=0; i<Caselist.size(); i++)
-        {
-            if(day.equals(Caselist.get(i).getDate()) )
-            {
-                return Caselist.get(i);
+        for (CaseRecord caseRecord : Caselist) {
+            if (day.equals(caseRecord.getDate())) {
+                return caseRecord;
             }
         }
         throw new DatasetException("No record found!");
@@ -90,21 +89,29 @@ public class CovidDataset {
         PrintWriter a = new PrintWriter(file);
         a.println("Date,Staff,Students,Other");
         int i = 0;
+        int the_staff = 0;
+        int the_student = 0;
+        int the_other = 0;
+        LocalDate the_date = null;
+        for(i = 0; i < 9;i++)
+        {
+            the_staff += Caselist.get(i).getStaffCases();
+            the_student += Caselist.get(i).getStudentCases();
+            the_other += Caselist.get(i).getOtherCases();
+            the_date = Caselist.get(i).getDate();
+        }
         while(i < Caselist.size())
         {
-            int the_staff = 0;
-            int the_student = 0;
-            int the_other = 0;
-            LocalDate the_date = null;
+
             the_staff += Caselist.get(i).getStaffCases();
             the_student += Caselist.get(i).getStudentCases();
             the_other += Caselist.get(i).getOtherCases();
             the_date = Caselist.get(i).getDate();
             if(i > 9)
             {
-                the_staff -= Caselist.get(i-9).getStaffCases();
-                the_student -= Caselist.get(i-9).getStudentCases();
-                the_other -= Caselist.get(i-9).getOtherCases();
+                the_staff -= Caselist.get(i-10).getStaffCases();
+                the_student -= Caselist.get(i-10).getStudentCases();
+                the_other -= Caselist.get(i-10).getOtherCases();
             }
             String line =(the_date)+","+(the_staff)+","+(the_student)+","+(the_other);
             a.println(line);
